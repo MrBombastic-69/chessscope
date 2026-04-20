@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ChessScope</title>
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Landing -->
+  <section id="landing" class="card">
+    <h1>♟ ChessScope</h1>
+    <p class="subtitle">
+Analyze your Chess.com profile with advanced insights, trends, and global matchups.
+</p>
+
+    <input id="username" placeholder="Enter Chess.com username">
+
+    <div class="buttons">
+      <button class="primary" onclick="startScan('quick')">⚡ Quick Scan</button>
+      <button class="danger" onclick="startScan('full')">🔥 Deep Scan</button>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <section id="loading" class="card hidden">
+    <h2 id="loadingTitle">Analyzing...</h2>
+
+    <div class="progress-wrap">
+      <div id="progressBar"></div>
+    </div>
+
+    <p id="statusText">Starting...</p>
+    <p id="funText">♟ Preparing the board...</p>
+  </section>
+
+  <!-- Results -->
+  <section id="results" class="hidden">
+
+    <div class="card">
+
+    <h2 id="playerName"></h2>
+
+    <div class="stats-grid" id="topStats"></div>
+
+    <div class="section">
+    <h2>📊 Performance</h2>
+
+    <div class="stats-grid">
+    <div class="stat-card">
+    <canvas id="resultChart"></canvas>
+    </div>
+
+    <div class="stat-card">
+    <canvas id="colorChart"></canvas>
+    </div>
+    </div>
+    </div>
+
+    <div class="section">
+    <h2>🌍 Country Leaderboard</h2>
+
+      <div class="country-tools">
+
+        <input
+        id="countrySearch"
+        placeholder="Search country..."
+        oninput="filterCountries()">
+
+        <select id="countrySort"
+        onchange="renderCountries(currentCountryStats)">
+        <option value="wins">Most Wins</option>
+        <option value="rate">Best Winrate</option>
+        <option value="games">Most Games</option>
+        <option value="losses">Worst Record</option>
+        <option value="az">A-Z</option>
+        </select>
+
+        </div>
+
+        <div id="rivalBox"></div>
+
+        <div id="countries"></div>
+      </div>
+
+    <div class="center">
+    <button class="primary" onclick="resetApp()">
+    Analyze Another
+    </button>
+    </div>
+
+    </div>
+  </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="static/app.js"></script>
+</body>
+</html>
