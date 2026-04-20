@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "";
 
 let funMessages = [
 "♟ Studying your blunders...",
@@ -125,17 +125,17 @@ document.getElementById("topStats").innerHTML = `
 
 <div class="stat-card">
 <h3>Best Country</h3>
-<p>${countryName(data.best_country)}</p>
+<p>${countryName(data.best_country) || "N/A"}</p>
 </div>
 
 <div class="stat-card">
 <h3>Worst Country</h3>
-<p>${countryName(data.worst_country)}</p>
+<p>${countryName(data.worst_country) || "N/A"}</p>
 </div>
 
 <div class="stat-card">
 <h3>Response</h3>
-<p>${data.response_time_seconds}s</p>
+<p>${data.response_time_seconds || 0}s</p>
 </div>
 `;
 
@@ -363,7 +363,7 @@ document
 .getElementById("countries")
 .insertAdjacentHTML("beforebegin", html);
 }
-
+alert
 function filterCountries(){
 renderCountries(currentCountryStats);
 }

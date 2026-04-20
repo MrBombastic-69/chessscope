@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 from collections import Counter
 import httpx
 import json
@@ -11,6 +15,11 @@ import os
 
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,9 +51,13 @@ def update_status(username, status, progress, eta):
 
 
 # 🔹 Home
-@app.get("/")
-def home():
-    return {"status": "running"}
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={}
+    )
 
 # 🔹 Return cached stats
 @app.get("/stats/{username}")
@@ -242,7 +255,21 @@ async def analyze(username: str):
         total = len(games)
 
         update_status(username, "Done", 100, 0)
+        
+        best_country = None
+        worst_country = None
 
+        if country_stats:
+            best_country = max(
+                country_stats.items(),
+                key=lambda x: x[1]["wins"] - x[1]["losses"]
+            )[0]
+
+            worst_country = min(
+                country_stats.items(),
+                key=lambda x: x[1]["wins"] - x[1]["losses"]
+            )[0]
+        
         return {
             "mode": "quick",
             "response_time_seconds":
@@ -253,6 +280,9 @@ async def analyze(username: str):
             "wins": wins,
             "losses": losses,
             "draws": draws,
+            "estimated_playtime_hours": 0,
+            "best_country": best_country,
+            "worst_country": worst_country,
 
             "winrate":
                 round((wins / total) * 100, 1)
